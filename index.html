@@ -13,290 +13,263 @@
     </style>
 </head>
 <body>
-    <div id="app" class="p-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-white mb-2">
-                    PowerShell Script Obfuscator
-                </h1>
-                <p class="text-purple-200">Reduce Shannon entropy through variable obfuscation and comment injection</p>
-            </div>
+<div id="app" class="p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">PowerShell Script Obfuscator</h1>
+            <p class="text-purple-200">Reduce Shannon entropy through variable obfuscation, token manipulation and comment injection</p>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Input Section -->
-                <div class="bg-slate-800 rounded-lg shadow-2xl p-6 border border-purple-500/30">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-white">Original Script</h2>
-                        <label class="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg cursor-pointer transition-colors">
-                            <span>📁 Upload</span>
-                            <input type="file" id="fileUpload" accept=".ps1,.txt" class="hidden">
-                        </label>
-                    </div>
-                    <textarea
-                        id="inputScript"
-                        placeholder="Paste your PowerShell script here..."
-                        class="w-full h-96 bg-slate-900 text-green-400 font-mono text-sm p-4 rounded-lg border border-slate-700 focus:border-purple-500 focus:outline-none resize-none"
-                        spellcheck="false"
-                    ></textarea>
-                    <div id="originalEntropyDiv" class="mt-4 p-3 bg-slate-900 rounded-lg border border-slate-700 hidden">
-                        <p class="text-purple-300 text-sm">
-                            <span class="font-semibold">Original Entropy:</span> <span id="originalEntropy">0</span> bits
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Output Section -->
-                <div class="bg-slate-800 rounded-lg shadow-2xl p-6 border border-purple-500/30">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-white">Obfuscated Script</h2>
-                        <button
-                            id="downloadBtn"
-                            class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-                            disabled
-                        >
-                            <span>💾 Download</span>
-                        </button>
-                    </div>
-                    <textarea
-                        id="outputScript"
-                        readonly
-                        placeholder="Obfuscated script will appear here..."
-                        class="w-full h-96 bg-slate-900 text-green-400 font-mono text-sm p-4 rounded-lg border border-slate-700 resize-none"
-                        spellcheck="false"
-                    ></textarea>
-                    <div id="finalEntropyDiv" class="mt-4 p-3 bg-slate-900 rounded-lg border border-slate-700 hidden">
-                        <p class="text-green-300 text-sm mb-1">
-                            <span class="font-semibold">Final Entropy:</span> <span id="finalEntropy">0</span> bits
-                        </p>
-                        <p class="text-purple-300 text-sm">
-                            <span class="font-semibold">Reduction:</span> <span id="entropyReduction">0</span>%
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Obfuscate Button -->
-            <div class="flex justify-center">
-                <button
-                    id="obfuscateBtn"
-                    class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-all transform hover:scale-105"
-                >
-                    <span>🔄 Obfuscate Script</span>
-                </button>
-            </div>
-
-            <!-- Info Section -->
-            <div class="mt-8 bg-slate-800 rounded-lg p-6 border border-purple-500/30">
-                <h3 class="text-lg font-semibold text-white mb-3">Obfuscation Features:</h3>
-                <ul class="text-purple-200 space-y-2">
-                    <li>✓ Replaces variable names with random 20-30 character alphanumeric strings</li>
-                    <li>✓ Adds 6-8 repetitive comments at the beginning</li>
-                    <li>✓ Inserts at least 5 comments after each semicolon</li>
-                    <li>✓ Appends 10-15 comments at the end</li>
-                    <li>✓ Calculates and displays Shannon entropy reduction</li>
-                </ul>
+        <!-- Obfuscation Options -->
+        <div class="bg-slate-800 rounded-lg shadow-2xl p-6 border border-purple-500/30 mb-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Obfuscation Options:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex items-center gap-3 text-purple-200 cursor-pointer">
+                    <input type="checkbox" id="obfuscateVariables" checked class="w-5 h-5 rounded bg-slate-700 border-purple-500">
+                    <span>Obfuscate Variable Names</span>
+                </label>
+                <label class="flex items-center gap-3 text-purple-200 cursor-pointer">
+                    <input type="checkbox" id="obfuscateTokens" checked class="w-5 h-5 rounded bg-slate-700 border-purple-500">
+                    <span>Obfuscate Tokens (Commands, Strings, etc.)</span>
+                </label>
+                <label class="flex items-center gap-3 text-purple-200 cursor-pointer">
+                    <input type="checkbox" id="addComments" checked class="w-5 h-5 rounded bg-slate-700 border-purple-500">
+                    <span>Add Repetitive Comments</span>
+                </label>
             </div>
         </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Input Section -->
+            <div class="bg-slate-800 rounded-lg shadow-2xl p-6 border border-purple-500/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-white">Original Script</h2>
+                    <label class="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg cursor-pointer transition-colors">
+                        <span>📁 Upload</span>
+                        <input type="file" id="fileUpload" accept=".ps1,.txt" class="hidden">
+                    </label>
+                </div>
+                <textarea
+                    id="inputScript"
+                    placeholder="Paste your PowerShell script here..."
+                    class="w-full h-96 bg-slate-900 text-green-400 font-mono text-sm p-4 rounded-lg border border-slate-700 focus:border-purple-500 focus:outline-none resize-none"
+                    spellcheck="false"
+                ></textarea>
+                <div id="originalEntropyDiv" class="mt-4 p-3 bg-slate-900 rounded-lg border border-slate-700 hidden">
+                    <p class="text-purple-300 text-sm">
+                        <span class="font-semibold">Original Entropy:</span> <span id="originalEntropy">0</span> bits
+                    </p>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="bg-slate-800 rounded-lg shadow-2xl p-6 border border-purple-500/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-white">Obfuscated Script</h2>
+                    <button
+                        id="downloadBtn"
+                        class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                        disabled
+                    >
+                        <span>💾 Download</span>
+                    </button>
+                </div>
+                <textarea
+                    id="outputScript"
+                    readonly
+                    placeholder="Obfuscated script will appear here..."
+                    class="w-full h-96 bg-slate-900 text-green-400 font-mono text-sm p-4 rounded-lg border border-slate-700 resize-none"
+                    spellcheck="false"
+                ></textarea>
+                <div id="finalEntropyDiv" class="mt-4 p-3 bg-slate-900 rounded-lg border border-slate-700 hidden">
+                    <p class="text-green-300 text-sm mb-1">
+                        <span class="font-semibold">Final Entropy:</span> <span id="finalEntropy">0</span> bits
+                    </p>
+                    <p class="text-purple-300 text-sm">
+                        <span class="font-semibold">Reduction:</span> <span id="entropyReduction">0</span>%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Obfuscate Button -->
+        <div class="flex justify-center">
+            <button
+                id="obfuscateBtn"
+                class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg font-semibold rounded-lg shadow-lg transition-all transform hover:scale-105"
+            >
+                <span>🔄 Obfuscate Script</span>
+            </button>
+        </div>
+
+        <!-- Info Section -->
+        <div class="mt-8 bg-slate-800 rounded-lg p-6 border border-purple-500/30">
+            <h3 class="text-lg font-semibold text-white mb-3">Obfuscation Features:</h3>
+            <ul class="text-purple-200 space-y-2">
+                <li>✓ Replaces variable names with random 20-30 character alphanumeric strings</li>
+                <li>✓ Token obfuscation: Randomizes string quotes, adds random case, concatenates commands, encodes strings</li>
+                <li>✓ Adds 6-8 repetitive comments at the beginning</li>
+                <li>✓ Inserts at least 5 comments after each semicolon or code line</li>
+                <li>✓ Appends 10-15 comments at the end</li>
+                <li>✓ Calculates and displays Shannon entropy reduction</li>
+                <li>✓ Preserves numeric operations so they evaluate correctly</li>
+            </ul>
+        </div>
     </div>
+</div>
 
-    <script>
-        const COMMENT = '# aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+<script>
+const COMMENT = '# aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
-        function calculateShannonEntropy(text) {
-            if (!text) return 0;
-            
-            const freq = {};
-            for (let char of text) {
-                freq[char] = (freq[char] || 0) + 1;
-            }
-            
-            let entropy = 0;
-            const len = text.length;
-            
-            for (let char in freq) {
-                const p = freq[char] / len;
-                entropy -= p * Math.log2(p);
-            }
-            
-            return entropy;
-        }
+function calculateShannonEntropy(text) {
+    if (!text) return 0;
+    const freq = {};
+    for (let char of text) freq[char] = (freq[char] || 0) + 1;
+    let entropy = 0;
+    const len = text.length;
+    for (let char in freq) {
+        const p = freq[char] / len;
+        entropy -= p * Math.log2(p);
+    }
+    return entropy;
+}
 
-        function generateRandomVarName() {
-            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const length = Math.floor(Math.random() * 11) + 20;
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
+function generateRandomVarName() {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const length = Math.floor(Math.random() * 11) + 20;
+    let result = '';
+    for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+    return result;
+}
 
-        function extractVariables(script) {
-            const variablePattern = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
-            const variables = new Set();
-            let match;
-            
-            while ((match = variablePattern.exec(script)) !== null) {
-                variables.add(match[1]);
-            }
-            
-            return Array.from(variables);
-        }
+function randomizeCase(str) {
+    return str.split('').map(char => Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase()).join('');
+}
 
-        function obfuscateScript() {
-            const inputScript = document.getElementById('inputScript').value;
-            
-            if (!inputScript.trim()) {
-                alert('Please enter a PowerShell script');
-                return;
-            }
+function obfuscateString(str, quoteType) {
+    const techniques = [
+        () => str,
+        () => { if (str.length < 3) return str; const mid = Math.floor(str.length / 2); return `${quoteType}${str.substring(0, mid)}${quoteType}+${quoteType}${str.substring(mid)}${quoteType}`; },
+        () => `${quoteType}{0}${quoteType} -f ${quoteType}${str}${quoteType}`
+    ];
+    const technique = techniques[Math.floor(Math.random() * techniques.length)];
+    return technique();
+}
 
-            let obfuscated = inputScript;
-            
-            // Calculate original entropy
-            const origEntropy = calculateShannonEntropy(inputScript);
-            document.getElementById('originalEntropy').textContent = origEntropy.toFixed(4);
-            document.getElementById('originalEntropyDiv').classList.remove('hidden');
-            
-            // Extract and replace variables
-            const variables = extractVariables(inputScript);
-            const varMapping = {};
-            
-            variables.forEach(varName => {
-                varMapping[varName] = generateRandomVarName();
-            });
-            
-            // Replace variables in script
-            variables.forEach(varName => {
-                const regex = new RegExp(`\\$${varName}\\b`, 'g');
-                obfuscated = obfuscated.replace(regex, `$${varMapping[varName]}`);
-            });
-            
-            // Add comments at the beginning (6-8 times)
-            const beginComments = Math.floor(Math.random() * 3) + 6;
-            let commentPrefix = '';
-            for (let i = 0; i < beginComments; i++) {
-                commentPrefix += COMMENT + '\n';
-            }
-            
-            obfuscated = commentPrefix + obfuscated;
-            
-            // Insert comments after semicolons OR handle no-semicolon scripts by attaching comments
-            const semicolonPresent = /;/.test(inputScript);
-            if (semicolonPresent) {
-                // Add comments after each semicolon (at least 5 times)
-                obfuscated = obfuscated.replace(/;/g, (match) => {
-                    const numComments = Math.floor(Math.random() * 3) + 5;
-                    let comments = match;
-                    for (let i = 0; i < numComments; i++) {
-                        comments += '\n' + COMMENT;
-                    }
-                    return comments;
-                });
-            } else {
-                // No semicolons present — insert comments intelligently:
-                //  - before function declarations
-                //  - after closing braces `}`
-                //  - after each non-empty, non-comment code line (e.g. assignments)
-                const lines = obfuscated.split(/\r?\n/);
-                const newLines = [];
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    const trimmed = line.trim();
+function obfuscateTokens(script) {
+    let obfuscated = script;
 
-                    // Preserve blank lines and existing comments as-is
-                    if (trimmed === '' || trimmed.startsWith('#')) {
-                        newLines.push(line);
-                        continue;
-                    }
+    // Obfuscate string literals only (preserve numeric operations)
+    obfuscated = obfuscated.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, match => {
+        const quote = match[0];
+        const content = match.slice(1, -1);
+        const obfStr = obfuscateString(content, quote);
+        return obfStr.includes('+') || obfStr.includes('-f') ? obfStr : `${quote}${content}${quote}`;
+    });
 
-                    // If this line is a function declaration: add a comment BEFORE it and comments after the declaration line
-                    if (/^function\b/i.test(trimmed)) {
-                        // comment before
-                        newLines.push(COMMENT);
-                        newLines.push(line);
-                        // add 5-7 comments after the function declaration line
-                        const numAfterDecl = Math.floor(Math.random() * 3) + 5;
-                        for (let j = 0; j < numAfterDecl; j++) {
-                            newLines.push(COMMENT);
-                        }
-                        continue;
-                    }
+    // Randomize case of common cmdlets/keywords
+    const cmdlets = [
+        'Write-Host','Write-Output','Write-Verbose','Write-Warning','Write-Error',
+        'Get-Process','Get-Service','Get-Item','Get-Location','Get-Date'
+        // add more as needed
+    ];
+    cmdlets.forEach(cmdlet => {
+        const regex = new RegExp(`\\b${cmdlet}\\b`, 'gi');
+        obfuscated = obfuscated.replace(regex, () => randomizeCase(cmdlet));
+    });
 
-                    // If this line is a closing brace of a block, add comments after it
-                    if (trimmed === '}' || trimmed === '};') {
-                        newLines.push(line);
-                        const numAfterClose = Math.floor(Math.random() * 3) + 5;
-                        for (let j = 0; j < numAfterClose; j++) {
-                            newLines.push(COMMENT);
-                        }
-                        continue;
-                    }
+    return obfuscated;
+}
 
-                    // Otherwise — code line (assignment, call, etc.) — append the line then insert multiple comments
-                    newLines.push(line);
-                    const numComments = Math.floor(Math.random() * 3) + 5;
-                    for (let j = 0; j < numComments; j++) {
-                        newLines.push(COMMENT);
-                    }
-                }
+function extractVariables(script) {
+    const variablePattern = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
+    const variables = new Set();
+    let match;
+    while ((match = variablePattern.exec(script)) !== null) variables.add(match[1]);
+    return Array.from(variables);
+}
 
-                obfuscated = newLines.join('\n');
-            }
-            
-            // Add comments at the end (10-15 times)
-            const endComments = Math.floor(Math.random() * 6) + 10;
-            let commentSuffix = '\n';
-            for (let i = 0; i < endComments; i++) {
-                commentSuffix += COMMENT + '\n';
-            }
-            
-            obfuscated += commentSuffix;
-            
-            // Calculate final entropy
-            const finEntropy = calculateShannonEntropy(obfuscated);
-            document.getElementById('finalEntropy').textContent = finEntropy.toFixed(4);
-            document.getElementById('finalEntropyDiv').classList.remove('hidden');
-            
-            const entropyReduction = origEntropy > 0 
-                ? ((origEntropy - finEntropy) / origEntropy * 100).toFixed(2)
-                : 0;
-            document.getElementById('entropyReduction').textContent = entropyReduction;
-            
-            document.getElementById('outputScript').value = obfuscated;
-            document.getElementById('downloadBtn').disabled = false;
-        }
+function obfuscateScript() {
+    const inputScript = document.getElementById('inputScript').value;
+    const obfuscateVars = document.getElementById('obfuscateVariables').checked;
+    const obfuscateToks = document.getElementById('obfuscateTokens').checked;
+    const addComms = document.getElementById('addComments').checked;
 
-        function downloadScript() {
-            const outputScript = document.getElementById('outputScript').value;
-            if (!outputScript) return;
-            
-            const blob = new Blob([outputScript], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'obfuscated_script.ps1';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+    if (!inputScript.trim()) { alert('Please enter a PowerShell script'); return; }
 
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('inputScript').value = e.target.result;
-                };
-                reader.readAsText(file);
-            }
-        }
+    let obfuscated = inputScript;
 
-        // Event listeners
-        document.getElementById('obfuscateBtn').addEventListener('click', obfuscateScript);
-        document.getElementById('downloadBtn').addEventListener('click', downloadScript);
-        document.getElementById('fileUpload').addEventListener('change', handleFileUpload);
-    </script>
+    const origEntropy = calculateShannonEntropy(inputScript);
+    document.getElementById('originalEntropy').textContent = origEntropy.toFixed(4);
+    document.getElementById('originalEntropyDiv').classList.remove('hidden');
+
+    if (obfuscateToks) obfuscated = obfuscateTokens(obfuscated);
+
+    if (obfuscateVars) {
+        const variables = extractVariables(obfuscated);
+        const varMapping = {};
+        variables.forEach(varName => varMapping[varName] = generateRandomVarName());
+        variables.forEach(varName => {
+            const regex = new RegExp(`\\$${varName}\\b`, 'g');
+            obfuscated = obfuscated.replace(regex, `$${varMapping[varName]}`);
+        });
+    }
+
+    if (addComms) {
+        const lines = obfuscated.split(/\r?\n/);
+        const newLines = [];
+
+        const addComment = () => newLines.push(COMMENT);
+
+        lines.forEach(line => {
+            const trimmed = line.trim();
+            if (trimmed === '' || trimmed.startsWith('#')) { newLines.push(line); return; }
+            newLines.push(line);
+            for (let i=0;i<5;i++) addComment(); // 5 comments after each line
+        });
+
+        // add beginning & end comments
+        for (let i=0;i<6;i++) newLines.unshift(COMMENT);
+        for (let i=0;i<10;i++) newLines.push(COMMENT);
+
+        obfuscated = newLines.join('\n');
+    }
+
+    const finEntropy = calculateShannonEntropy(obfuscated);
+    document.getElementById('finalEntropy').textContent = finEntropy.toFixed(4);
+    document.getElementById('finalEntropyDiv').classList.remove('hidden');
+    document.getElementById('entropyReduction').textContent = origEntropy>0 ? ((origEntropy-finEntropy)/origEntropy*100).toFixed(2) : 0;
+
+    document.getElementById('outputScript').value = obfuscated;
+    document.getElementById('downloadBtn').disabled = false;
+}
+
+function downloadScript() {
+    const outputScript = document.getElementById('outputScript').value;
+    if (!outputScript) return;
+    const blob = new Blob([outputScript], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'obfuscated_script.ps1';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => document.getElementById('inputScript').value = e.target.result;
+        reader.readAsText(file);
+    }
+}
+
+document.getElementById('obfuscateBtn').addEventListener('click', obfuscateScript);
+document.getElementById('downloadBtn').addEventListener('click', downloadScript);
+document.getElementById('fileUpload').addEventListener('change', handleFileUpload);
+</script>
 </body>
 </html>
