@@ -6,7 +6,6 @@ A browser-based tool to obfuscate PowerShell scripts by randomizing variable nam
 
 - **Variable Randomization**: Replaces variable names with random 20–30 character alphanumeric strings
 - **Comment Injection**: Adds comments at the beginning, after lines or semicolons, and at the end
-- **Flexible Script Handling**: Handles scripts with or without semicolons
 - **Entropy Analysis**: Displays original and final Shannon entropy with reduction percentage
 - **File Operations**: Supports file upload (`.ps1`/`.txt`) and download of obfuscated scripts
 - **Client-Side Processing**: Runs entirely in the browser — no server required
