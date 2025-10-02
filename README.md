@@ -1,25 +1,16 @@
-# PowerShell Script Obfuscator
+# PowerShell Script Obfuscator v1.1
 
-A browser-based tool to obfuscate PowerShell scripts by randomizing variable names and injecting comments, reducing Shannon entropy while preserving functionality.
+A browser-based tool to obfuscate PowerShell scripts by randomizing variable names, obfuscating tokens, and injecting comments, reducing Shannon entropy while preserving functionality.
 
 ## Features
 
 - **Variable Randomization**: Replaces variable names with random 20–30 character alphanumeric strings
+- **Token Obfuscation**: Randomizes string literals, command casing, and can split/concatenate strings to make detection harder
 - **Comment Injection**: Adds comments at the beginning, after lines or semicolons, and at the end
 - **Entropy Analysis**: Displays original and final Shannon entropy with reduction percentage
 - **File Operations**: Supports file upload (`.ps1`/`.txt`) and download of obfuscated scripts
-- **Client-Side Processing**: Runs entirely in the browser — no server required
-
-## Usage
-
-1. Open `index.html` in a modern browser
-2. Paste your PowerShell script or upload a `.ps1`/`.txt` file
-3. Click **"Obfuscate Script"** to generate the obfuscated version
-4. Click **"Download"** to save the obfuscated script
 
 ## Getting Started
-
-Simply clone this repository and open the `index.html` file in your web browser:
 
 ```bash
 git clone https://github.com/yashrustagi2004/psObfuscator.git
@@ -30,7 +21,9 @@ cd psObfuscator
 ## How It Works
 
 The obfuscator works by:
+
 - Parsing PowerShell variables and replacing them with randomized names
+- Obfuscating string literals and common cmdlets/keywords by randomizing case or splitting strings
 - Injecting benign comments throughout the script
 - Maintaining script functionality while reducing detectability
 - Calculating and displaying entropy reduction metrics
@@ -38,3 +31,17 @@ The obfuscator works by:
 ## Security Note
 
 This tool is intended for educational purposes and legitimate security testing. Always ensure you have proper authorization before using obfuscated scripts in any environment.
+
+## Version History
+
+### v1.1 – Updated release
+- Added token obfuscation feature for string literals and commands
+- Improved comment injection logic
+- Minor UI/UX improvements
+
+### v1.0 – Initial release
+- Variable randomization
+- Comment injection
+- Shannon entropy calculation
+- File upload/download support
+
